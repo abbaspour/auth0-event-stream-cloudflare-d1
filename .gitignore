@@ -1,0 +1,6 @@
+.wrangler
+.idea
+dist
+node_modules
+*.sqlite
+package-lock.json

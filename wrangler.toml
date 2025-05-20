@@ -1,0 +1,14 @@
+name = "auth0-user-event"
+main = "src/index.ts"
+compatibility_date = "2023-05-01"
+
+[build]
+command = "npm run build"
+
+[triggers]
+crons = []
+
+[[d1_databases]]
+binding = "DB"
+database_name = "auth0_events"
+database_id = "af6adf4d-7343-497c-bc26-f37f6fd85481"

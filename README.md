@@ -1,0 +1,133 @@
+# Auth0 User Event Worker
+
+A Cloudflare Worker that receives webhook requests from Auth0 event streams and persists user entities in a D1 SQLite database.
+
+## Features
+
+- Receives Auth0 webhook events on the `/events` endpoint
+- Logs incoming webhook data
+- Uses D1 SQLite database for data persistence (configured but not yet implemented)
+- Built with TypeScript for type safety
+- Uses Hono framework for routing and request handling
+
+## Setup
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v14 or later)
+- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/get-started/) (Cloudflare Workers CLI)
+
+### Installation
+
+1. Clone this repository
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Create a D1 database using Wrangler:
+
+```bash
+wrangler d1 create auth0_events
+```
+
+4. Update the `wrangler.toml` file with your database ID from the previous step. When you create the database, Wrangler will output something like:
+
+   ```
+   ✅ Successfully created DB 'auth0_events' in location LOCATION_NAME
+   Created D1 database '12345678-1234-1234-1234-123456789abc'
+   ```
+
+   Copy the UUID (e.g., `12345678-1234-1234-1234-123456789abc`) and replace the `database_id` value in `wrangler.toml`.
+
+5. Create the users table in your D1 database:
+
+```bash
+wrangler d1 execute auth0_events --remote --command "DROP TABLE users"
+wrangler d1 execute auth0_events --remote --command "CREATE TABLE users (
+  user_id TEXT PRIMARY KEY,
+  email TEXT,
+  email_verified BOOLEAN,
+  family_name TEXT,
+  given_name TEXT,
+  name TEXT,
+  nickname TEXT,
+  phone_number TEXT,
+  phone_verified BOOLEAN,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP,
+  picture TEXT,
+  user_metadata TEXT,
+  app_metadata TEXT,
+  identities TEXT,
+  raw_user TEXT,
+  last_event_processed TIMESTAMP
+);"
+```
+
+
+### Development
+
+To run the worker locally:
+
+Using npm:
+```bash
+npm run dev
+```
+
+Using Make:
+```bash
+make dev
+```
+
+### Deployment
+
+To deploy the worker to Cloudflare:
+
+Using npm:
+```bash
+npm run deploy
+```
+
+Using Make:
+```bash
+make deploy
+```
+
+### Building
+
+To build the project:
+
+Using npm:
+```bash
+npm run build
+```
+
+Using Make:
+```bash
+make
+# or
+make build
+```
+
+## Usage
+
+Send POST requests with JSON payloads to the `/events` endpoint. The worker will log the received data and respond with a success message.
+
+Example:
+
+```bash
+curl -X POST https://auth0-user-event.<your-subdomain>.workers.dev/events \
+  -H "Content-Type: application/json" \
+  -d '{"event_type": "user.created", "user": {"id": "auth0|123", "email": "user@example.com"}}'
+```
+
+## Project Structure
+
+- `src/index.ts` - Main worker code
+- `wrangler.toml` - Cloudflare Worker configuration
+- `package.json` - Project dependencies and scripts
+- `tsconfig.json` - TypeScript configuration
+- `webpack.config.js` - Webpack bundling configuration
+- `Makefile` - Build and deployment automation

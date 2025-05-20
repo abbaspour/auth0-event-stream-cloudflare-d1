@@ -1,0 +1,25 @@
+{
+  "name": "auth0-event-stream-cloudflare-d",
+  "version": "0.1.0",
+  "description": "Cloudflare Worker for handling Auth0 event stream webhooks",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "webpack",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250520.0",
+    "@types/node": "^18.16.3",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4",
+    "webpack": "^5.82.0",
+    "webpack-cli": "^5.1.1",
+    "wrangler": "^3.0.0"
+  },
+  "dependencies": {
+    "hono": "^4.7.10"
+  }
+}
