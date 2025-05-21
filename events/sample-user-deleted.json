@@ -1,0 +1,35 @@
+{
+  "id": "evt_o2qg79pyd8Er4bwaEN4Tdv",
+  "source": "urn:auth0:abbaspour.auth0.com",
+  "specversion": "1.0",
+  "type": "user.deleted",
+  "time": "2025-05-21T04:00:44.96Z",
+  "data": {
+    "object": {
+      "app_metadata": {
+        "crm_customer_id": 1234
+      },
+      "created_at": "2025-05-21T02:33:34.285Z",
+      "deleted_at": "2025-05-21T04:00:44.96Z",
+      "email": "amin+07@auth0.com",
+      "email_verified": false,
+      "identities": [
+        {
+          "connection": "Username-Password-Authentication",
+          "isSocial": false,
+          "provider": "auth0",
+          "user_id": "682d3b7ed33bcf38baaad60d"
+        }
+      ],
+      "multifactor_last_modified": "2025-05-21T04:00:44.913Z",
+      "name": "test3",
+      "nickname": "amin+07",
+      "picture": "https://s.gravatar.com/avatar/e523e2480327385b6995920dc99b7bc2?s=480&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fam.png",
+      "updated_at": "2025-05-21T04:00:44.913Z",
+      "user_id": "auth0|682d3b7ed33bcf38baaad60d",
+      "user_metadata": {}
+    }
+  },
+  "a0tenant": "abbaspour",
+  "a0stream": "est_wvNTn3NVFb7LESmFjGYsy9"
+}
