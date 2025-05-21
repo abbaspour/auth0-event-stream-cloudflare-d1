@@ -30,7 +30,7 @@ interface User {
     app_metadata?: {
         [key: string]: any;
     };
-    identities?: Array<{
+    identities: Array<{
         connection: string;
         user_id: string;
         provider: string;
@@ -164,7 +164,7 @@ async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boo
             .bind(
                 user_id,
                 email || null,
-                email_verified ?? null,
+                email_verified ?? false,
                 username ?? null,
                 blocked ?? false,
                 family_name || null,
@@ -172,7 +172,7 @@ async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boo
                 name || null,
                 nickname || null,
                 phone_number || null,
-                phone_verified ?? null,
+                phone_verified ?? false,
                 created_at || null,
                 updated_at || null,
                 picture || null,

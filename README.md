@@ -48,7 +48,7 @@ wrangler d1 execute auth0_events --remote --command "DROP TABLE users"
 wrangler d1 execute auth0_events --remote --command "CREATE TABLE users (
   user_id TEXT PRIMARY KEY,
   email TEXT,
-  email_verified BOOLEAN,
+  email_verified BOOLEAN DEFAULT FALSE,
   username TEXT,
   blocked BOOLEAN DEFAULT FALSE,
   family_name TEXT,
@@ -56,7 +56,7 @@ wrangler d1 execute auth0_events --remote --command "CREATE TABLE users (
   name TEXT,
   nickname TEXT,
   phone_number TEXT,
-  phone_verified BOOLEAN,
+  phone_verified BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP,
   updated_at TIMESTAMP,
   picture TEXT,
@@ -123,8 +123,14 @@ Example:
 ```bash
 curl -X POST https://auth0-user-event.<your-subdomain>.workers.dev/events \
   -H "Content-Type: application/json" \
-  -d '{"event_type": "user.created", "user": {"id": "auth0|123", "email": "user@example.com"}}'
+  -d @./event/sample-user-created.json
 ```
+
+To monitor the log:
+
+``bash
+wrangler tail
+``
 
 ## Project Structure
 
