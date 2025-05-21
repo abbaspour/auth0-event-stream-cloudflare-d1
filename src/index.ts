@@ -1,14 +1,13 @@
 // noinspection SqlDialectInspection
 
 import { Hono } from 'hono';
-import { UserCreated } from './types';
+import { User } from './types';
 
 // Define interface for environment bindings
 export interface Env {
-  DB: D1Database;
+  DB: any; // D1Database from Cloudflare Workers
 }
 
-// Create a new Hono app
 const app = new Hono<{ Bindings: Env }>();
 
 // Handle POST requests to the /events endpoint
@@ -26,12 +25,8 @@ app.post('/events', async (c) => {
     try {
       switch (type) {
         case "user.created":
-          await handleUserCreated(user, time, c);
-          break;
         case "user.updated":
-          // These functions are not implemented yet
-          console.log(`Event type '${type}' not implemented yet.`);
-          // await handleUserUpdated(user, time, c);
+          await handleUserUpsert(user, time, c, type === "user.created");
           break;
         case "user.deleted":
           // These functions are not implemented yet
@@ -65,10 +60,7 @@ export default {
   fetch: app.fetch,
 };
 
-
-// Specific function for handling the user created event
-// In this example we're making sure users are also created in our own database
-async function handleUserCreated(user: UserCreated, time: string, c: any) {
+async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boolean) {
   const { 
     user_id, 
     email, 
@@ -91,46 +83,44 @@ async function handleUserCreated(user: UserCreated, time: string, c: any) {
   const rawUserJson = JSON.stringify(user);
 
   // Convert complex objects to JSON strings for storage
-  const userMetadataJson = JSON.stringify(user_metadata);
-  const appMetadataJson = JSON.stringify(app_metadata);
-  const identitiesJson = JSON.stringify(identities);
+  const userMetadataJson = user_metadata ? JSON.stringify(user_metadata) : null;
+  const appMetadataJson = app_metadata ? JSON.stringify(app_metadata) : null;
+  const identitiesJson = identities ? JSON.stringify(identities) : null;
 
   try {
-    // Use D1 database binding to execute the query
+    // Use D1 database binding to execute the query with REPLACE INTO for upsert
     await c.env.DB.prepare(`
-      INSERT INTO users (
-        user_id, 
-        email, 
-        email_verified, 
-        family_name, 
-        given_name, 
-        name, 
-        nickname, 
-        phone_number, 
-        phone_verified, 
-        created_at, 
-        updated_at, 
-        picture, 
-        user_metadata,
-        app_metadata,
-        identities,
-        raw_user, 
-        last_event_processed
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        REPLACE INTO users (user_id,
+                           email,
+                           email_verified,
+                           family_name,
+                           given_name,
+                           name,
+                           nickname,
+                           phone_number,
+                           phone_verified,
+                           created_at,
+                           updated_at,
+                           picture,
+                           user_metadata,
+                           app_metadata,
+                           identities,
+                           raw_user,
+                           last_event_processed)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
     .bind(
       user_id,
-      email,
-      email_verified,
+      email || null,
+      email_verified ?? null,
       family_name || null,
       given_name || null,
-      name,
-      nickname,
+      name || null,
+      nickname || null,
       phone_number || null,
-      phone_verified,
-      created_at,
-      updated_at,
+      phone_verified ?? null,
+      created_at || null,
+      updated_at || null,
       picture || null,
       userMetadataJson,
       appMetadataJson,
@@ -140,13 +130,9 @@ async function handleUserCreated(user: UserCreated, time: string, c: any) {
     )
     .run();
 
-    console.log(`User ${user_id} successfully inserted into database.`);
+    console.log(`User ${user_id} successfully ${isNewUser ? 'inserted' : 'updated'} into database.`);
   } catch (err: any) {
-    if (err.message && err.message.includes('UNIQUE constraint failed')) {
-      console.error(`Duplicate user_id=${user_id}, skipping insert.`);
-    } else {
-      console.error(`Database error while creating user_id=${user_id}:`, err);
-      throw err;
-    }
+    console.error(`Database error while upserting user_id=${user_id}:`, err);
+    throw err;
   }
 }
