@@ -64,7 +64,8 @@ async function handleUserDeleted(user: User, time: string, c: any) {
         await c.env.DB.prepare(`
             DELETE
             FROM users
-            where user_id = $1`)
+            where user_id = $1`
+        )
             .bind(
                 user_id
             )
@@ -80,6 +81,7 @@ async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boo
         user_id,
         email,
         email_verified,
+        blocked,
         family_name,
         given_name,
         name,
@@ -109,6 +111,7 @@ async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boo
             INTO users (user_id,
                            email,
                            email_verified,
+                           blocked,
                            family_name,
                            given_name,
                            name,
@@ -123,12 +126,13 @@ async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boo
                            identities,
                            raw_user,
                            last_event_processed)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `)
             .bind(
                 user_id,
                 email || null,
                 email_verified ?? null,
+                blocked ?? false,
                 family_name || null,
                 given_name || null,
                 name || null,

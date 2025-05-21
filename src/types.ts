@@ -9,6 +9,7 @@ export interface User {
   user_id: string;
   email?: string;
   email_verified?: boolean;
+  blocked?: boolean;
   family_name?: string;
   given_name?: string;
   name?: string;
