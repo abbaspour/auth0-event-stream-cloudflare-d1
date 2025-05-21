@@ -1,7 +1,6 @@
 // noinspection SqlDialectInspection
 
 import {Hono} from 'hono';
-import {User} from './types';
 
 // Define interface for environment bindings
 export interface Env {
@@ -9,6 +8,38 @@ export interface Env {
 }
 
 const app = new Hono<{ Bindings: Env }>();
+
+/**
+ * Represents a user created event from Auth0
+ */
+interface User {
+    user_id: string;
+    email?: string;
+    email_verified?: boolean;
+    username?: string;
+    blocked?: boolean;
+    family_name?: string;
+    given_name?: string;
+    name?: string;
+    nickname?: string;
+    phone_number?: string;
+    phone_verified?: boolean;
+    user_metadata?: {
+        [key: string]: any;
+    };
+    app_metadata?: {
+        [key: string]: any;
+    };
+    identities?: Array<{
+        connection: string;
+        user_id: string;
+        provider: string;
+        isSocial: boolean;
+    }>;
+    created_at?: string;
+    updated_at?: string;
+    picture?: string;
+}
 
 // Handle POST requests to the /events endpoint
 app.post('/events', async (c) => {
@@ -81,6 +112,7 @@ async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boo
         user_id,
         email,
         email_verified,
+        username,
         blocked,
         family_name,
         given_name,
@@ -111,6 +143,7 @@ async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boo
             INTO users (user_id,
                            email,
                            email_verified,
+                           username,
                            blocked,
                            family_name,
                            given_name,
@@ -126,12 +159,13 @@ async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boo
                            identities,
                            raw_user,
                            last_event_processed)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `)
             .bind(
                 user_id,
                 email || null,
                 email_verified ?? null,
+                username ?? null,
                 blocked ?? false,
                 family_name || null,
                 given_name || null,

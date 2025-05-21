@@ -49,6 +49,8 @@ wrangler d1 execute auth0_events --remote --command "CREATE TABLE users (
   user_id TEXT PRIMARY KEY,
   email TEXT,
   email_verified BOOLEAN,
+  username TEXT,
+  blocked BOOLEAN DEFAULT FALSE,
   family_name TEXT,
   given_name TEXT,
   name TEXT,
@@ -62,8 +64,9 @@ wrangler d1 execute auth0_events --remote --command "CREATE TABLE users (
   app_metadata TEXT,
   identities TEXT,
   raw_user TEXT,
+  inserted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_event_processed TIMESTAMP
-);"
+)"
 ```
 
 

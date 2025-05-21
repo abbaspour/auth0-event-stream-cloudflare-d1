@@ -15,7 +15,7 @@ log:
 .PHONY: help dev build all log
 
 list-users:
-	wrangler d1 execute auth0_events --remote --command "SELECT * FROM users"
+	wrangler d1 execute auth0_events --remote --command "SELECT * FROM users" --json
 
 help:
 	@echo "Available targets:"
