@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "format": "prettier --write \"**/*.{js,.d.ts,md}\""
   },
   "author": "Amin Abbaspour",
   "license": "ISC",

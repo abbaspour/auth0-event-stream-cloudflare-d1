@@ -1,11 +1,10 @@
 // noinspection SqlDialectInspection
 
-import {Hono} from 'hono';
+import {Context, Hono} from 'hono';
 import {bearerAuth} from 'hono/bearer-auth'
 
-// Define interface for environment bindings
 export interface Env {
-    DB: any; // D1Database from Cloudflare Workers
+    DB: D1Database;
     API_TOKEN: string
 }
 
@@ -59,7 +58,7 @@ app.post('/events', async (c) => {
         // Log the received webhook data
         console.log('Received Auth0 webhook event:', JSON.stringify(eventData, null, 2));
 
-        const {id, type, time, data} = eventData;
+        const {type, time, data} = eventData;
         const user = data.object;
 
         try {
@@ -69,7 +68,7 @@ app.post('/events', async (c) => {
                     await handleUserUpsert(user, time, c, type === "user.created");
                     break;
                 case "user.deleted":
-                    await handleUserDeleted(user, time, c);
+                    await handleUserDeleted(user, c);
                     break;
                 default:
                     console.log(`Event type '${type}' not implemented yet.`);
@@ -96,7 +95,7 @@ export default {
     fetch: app.fetch,
 };
 
-async function handleUserDeleted(user: User, time: string, c: any) {
+async function handleUserDeleted(user: User, c: Context) {
     const {user_id} = user;
 
     try {
@@ -116,7 +115,7 @@ async function handleUserDeleted(user: User, time: string, c: any) {
     }
 }
 
-async function handleUserUpsert(user: User, time: string, c: any, isNewUser: boolean) {
+async function handleUserUpsert(user: User, time: string, c: Context, isNewUser: boolean) {
     const {
         user_id,
         email,

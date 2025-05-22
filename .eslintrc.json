@@ -10,6 +10,7 @@
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "plugins": ["prettier"],
+  "project": ["./tsconfig.json"],
   "rules": {
     "prettier/prettier": ["error", { 
       "semi": true,

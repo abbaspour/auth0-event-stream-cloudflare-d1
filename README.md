@@ -34,12 +34,12 @@ wrangler d1 create auth0_events
 
 4. Update the `wrangler.toml` file with your database ID from the previous step. When you create the database, Wrangler will output something like:
 
-   ```
-   ✅ Successfully created DB 'auth0_events' in location LOCATION_NAME
-   Created D1 database '12345678-1234-1234-1234-123456789abc'
-   ```
+    ```
+    ✅ Successfully created DB 'auth0_events' in location LOCATION_NAME
+    Created D1 database '12345678-1234-1234-1234-123456789abc'
+    ```
 
-   Copy the UUID (e.g., `12345678-1234-1234-1234-123456789abc`) and replace the `database_id` value in `wrangler.toml`.
+    Copy the UUID (e.g., `12345678-1234-1234-1234-123456789abc`) and replace the `database_id` value in `wrangler.toml`.
 
 5. Create the users table in your D1 database:
 
@@ -123,7 +123,7 @@ To monitor the log:
 
 ```bash
 wrangler tail
-``
+```
 
 Access the database:
 
@@ -132,7 +132,8 @@ wrangler d1 execute auth0_events --remote --command "SELECT * FROM users"
 ```
 
 ## Auth0 Setup
-Add a Webhook listener to Event Streams for all user events with URL pointing to your worker 
+
+Add a Webhook listener to Event Streams for all user events with URL pointing to your worker
 at https://auth0-user-event.<your-subdomain>.workers.dev/events and Bearer Authorization with $API_TOKEN from step 6.
 
 ![Auth0 Event Stream Setup](./event-stream-setup.png)
