@@ -1,10 +1,12 @@
 // noinspection SqlDialectInspection
 
 import {Hono} from 'hono';
+import {bearerAuth} from 'hono/bearer-auth'
 
 // Define interface for environment bindings
 export interface Env {
     DB: any; // D1Database from Cloudflare Workers
+    API_TOKEN: string
 }
 
 const app = new Hono<{ Bindings: Env }>();
@@ -40,6 +42,13 @@ interface User {
     updated_at?: string;
     picture?: string;
 }
+
+app.use('/*', async (c, next) => {
+    const auth = bearerAuth({
+        token: c.env.API_TOKEN
+    });
+    return auth(c, next);
+});
 
 // Handle POST requests to the /events endpoint
 app.post('/events', async (c) => {

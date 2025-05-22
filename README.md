@@ -69,49 +69,41 @@ wrangler d1 execute auth0_events --remote --command "CREATE TABLE users (
 )"
 ```
 
+6. Create an API_TOKEN to secure connection between Auth0 and your worker:
+
+```bash
+export API_TOKEN=`openssl rand -hex 32`
+echo "API_TOKEN=$API_TOKEN" > .env
+echo $API_TOKEN
+
+wrangler secret put API_TOKEN
+```
 
 ### Development
 
 To run the worker locally:
 
-Using npm:
 ```bash
-npm run dev
-```
-
-Using Make:
-```bash
-make dev
+npm run dev # using npm
+make dev    # using make
 ```
 
 ### Deployment
 
 To deploy the worker to Cloudflare:
 
-Using npm:
 ```bash
-npm run deploy
-```
-
-Using Make:
-```bash
-make deploy
+npm run deploy  # using npm
+make deploy     # using make
 ```
 
 ### Building
 
 To build the project:
 
-Using npm:
 ```bash
-npm run build
-```
-
-Using Make:
-```bash
-make
-# or
-make build
+npm run build # using npm
+make build    # using make
 ```
 
 ## Usage
@@ -123,14 +115,27 @@ Example:
 ```bash
 curl -X POST https://auth0-user-event.<your-subdomain>.workers.dev/events \
   -H "Content-Type: application/json" \
-  -d @./event/sample-user-created.json
+  -H "Authorization: Bearer ${API_TOKEN}" \
+  -d @./events/sample-user-created.json
 ```
 
 To monitor the log:
 
-``bash
+```bash
 wrangler tail
 ``
+
+Access the database:
+
+```bash
+wrangler d1 execute auth0_events --remote --command "SELECT * FROM users"
+```
+
+## Auth0 Setup
+Add a Webhook listener to Event Streams for all user events with URL pointing to your worker 
+at https://auth0-user-event.<your-subdomain>.workers.dev/events and Bearer Authorization with $API_TOKEN from step 6.
+
+![Auth0 Event Stream Setup](./event-stream-setup.png)
 
 ## Project Structure
 

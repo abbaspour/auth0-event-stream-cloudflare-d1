@@ -1,6 +1,6 @@
 name = "auth0-user-event"
 main = "src/index.ts"
-compatibility_date = "2023-05-01"
+compatibility_date = "2025-05-22"
 
 [build]
 command = "npm run build"

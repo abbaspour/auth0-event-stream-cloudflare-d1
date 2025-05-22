@@ -8,7 +8,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
   },
-  "author": "",
+  "author": "Amin Abbaspour",
   "license": "ISC",
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250520.0",
