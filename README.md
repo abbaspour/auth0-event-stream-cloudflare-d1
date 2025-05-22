@@ -125,11 +125,14 @@ To monitor the log:
 wrangler tail
 ```
 
-Access the database:
+Access the database from command line:
 
 ```bash
 wrangler d1 execute auth0_events --remote --command "SELECT * FROM users"
 ```
+
+As well as Cloudflare dashboard:
+![Cloudflare D1 auth0_events Database](./cloudflare-d1-auth0-users-db.png)
 
 ## Auth0 Setup
 
