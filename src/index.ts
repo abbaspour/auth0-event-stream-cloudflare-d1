@@ -1,14 +1,14 @@
 // noinspection SqlDialectInspection
 
-import { Context, Hono } from 'hono';
-import { bearerAuth } from 'hono/bearer-auth';
+import {Context, Hono} from 'hono';
+import {bearerAuth} from 'hono/bearer-auth';
 
 export interface Env {
     DB: D1Database;
     API_TOKEN: string;
 }
 
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<{Bindings: Env}>();
 
 /**
  * Represents a user created event from Auth0
@@ -58,7 +58,7 @@ app.post('/events', async (c) => {
         // Log the received webhook data
         console.log('Received Auth0 webhook event:', JSON.stringify(eventData, null, 2));
 
-        const { type, time, data } = eventData;
+        const {type, time, data} = eventData;
         const user = data.object;
 
         try {
@@ -75,19 +75,19 @@ app.post('/events', async (c) => {
             }
 
             console.log(`Webhook event of type '${type}' committed to the database.`);
-            return new Response(null, { status: 204 }); // No content response
+            return new Response(null, {status: 204}); // No content response
         } catch (err) {
             console.error('Error processing webhook:', err);
-            return c.json({ error: 'Internal server error' }, 500);
+            return c.json({error: 'Internal server error'}, 500);
         }
     } catch (error) {
         console.error('Error processing webhook:', error);
-        return c.json({ error: 'Invalid JSON payload' }, 400);
+        return c.json({error: 'Invalid JSON payload'}, 400);
     }
 });
 
 // Handle all other routes with a 404
-app.notFound((c: { text: (arg0: string, arg1: number) => any }) => c.text('Not Found', 404));
+app.notFound((c: {text: (arg0: string, arg1: number) => any}) => c.text('Not Found', 404));
 
 // Export default fetch handler for the worker
 // noinspection JSUnusedGlobalSymbols
@@ -96,7 +96,7 @@ export default {
 };
 
 async function handleUserDeleted(user: User, c: Context) {
-    const { user_id } = user;
+    const {user_id} = user;
 
     try {
         // Use D1 database binding to execute the query with REPLACE INTO for upsert
