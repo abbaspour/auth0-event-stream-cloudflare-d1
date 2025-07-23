@@ -6,7 +6,7 @@ A Cloudflare Worker that receives webhook requests from Auth0 event streams and 
 
 - Receives Auth0 webhook events on the `/events` endpoint
 - Logs incoming webhook data
-- Uses D1 SQLite database for data persistence (configured but not yet implemented)
+- Uses D1 SQLite database for data persistence
 - Built with TypeScript for type safety
 - Uses Hono framework for routing and request handling
 

@@ -1,5 +1,5 @@
 {
-  "name": "auth0-event-stream-cloudflare-d",
+  "name": "auth0-event-stream-cloudflare-d1",
   "version": "0.1.0",
   "description": "Cloudflare Worker for handling Auth0 event stream webhooks",
   "main": "dist/index.js",
